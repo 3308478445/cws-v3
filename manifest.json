@@ -1,0 +1,22 @@
+{
+    "name": "催收工作台",
+    "short_name": "催收工作台",
+    "description": "催收案件管理与调解计算工具 v3.0",
+    "start_url": "./index.html",
+    "display": "standalone",
+    "background_color": "#020617",
+    "theme_color": "#f97316",
+    "orientation": "any",
+    "icons": [
+        {
+            "src": "icons/icon-192.jpg",
+            "sizes": "192x192",
+            "type": "image/jpeg"
+        },
+        {
+            "src": "icons/icon-512.jpg",
+            "sizes": "512x512",
+            "type": "image/jpeg"
+        }
+    ]
+}
