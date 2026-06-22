@@ -3,16 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>催收工作台 v3.0</title>
+    <title>催收工作台 v3.2</title>
     <link rel="manifest" href="manifest.json">
     <link rel="stylesheet" href="tailwind-output.css">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="mobile-styles.css">
     <style>
-        /* === 缺失 Tailwind 类补丁 (tailwind-output.css 未覆盖) === */
+        /* === 缺失 Tailwind 类补丁 === */
         .max-w-2xl { max-width: 42rem; }
+        .max-w-3xl { max-width: 48rem; }
         .grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+        .grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
         .text-4xl { font-size: 2.25rem; line-height: 2.5rem; }
+        .text-2xl { font-size: 1.5rem; line-height: 2rem; }
         .bg-slate-900\/90 { background-color: rgba(15, 23, 42, 0.9); }
         .backdrop-blur-sm { backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
         .my-3 { margin-block: 0.75rem; }
@@ -21,19 +24,84 @@
         .pb-24 { padding-bottom: 6rem; }
         .overflow-y-auto { overflow-y: auto; }
         .gap-1 { gap: 0.25rem; }
+        .gap-2 { gap: 0.5rem; }
+        .gap-3 { gap: 0.75rem; }
         .max-w-md { max-width: 28rem; }
         .whitespace-pre-wrap { white-space: pre-wrap; }
         .list-decimal { list-style-type: decimal; }
         .list-inside { list-style-position: inside; }
         .leading-relaxed { line-height: 1.625; }
         .font-body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+        .cursor-pointer { cursor: pointer; }
+        .transition { transition: all 0.15s; }
+        .truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .line-clamp-3 { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+        .w-full { width: 100%; }
+        .mt-1 { margin-top: 0.25rem; }
+        .mt-2 { margin-top: 0.5rem; }
+        .mt-3 { margin-top: 0.75rem; }
+        .mt-4 { margin-top: 1rem; }
+        .mt-5 { margin-top: 1.25rem; }
+        .mb-1 { margin-bottom: 0.25rem; }
+        .mb-2 { margin-bottom: 0.5rem; }
+        .mb-3 { margin-bottom: 0.75rem; }
+        .mb-4 { margin-bottom: 1rem; }
+        .mb-5 { margin-bottom: 1.25rem; }
+        .mr-2 { margin-right: 0.5rem; }
+        .ml-2 { margin-left: 0.5rem; }
+        .flex-1 { flex: 1 1 0%; }
+        .flex-shrink-0 { flex-shrink: 0; }
+        .text-center { text-align: center; }
+        .text-right { text-align: right; }
+        .text-left { text-align: left; }
+        .font-bold { font-weight: 700; }
+        .font-medium { font-weight: 500; }
+        .font-normal { font-weight: 400; }
+        .hidden { display: none !important; }
+        .block { display: block; }
+        .flex { display: flex; }
+        .grid { display: grid; }
+        .items-center { align-items: center; }
+        .items-start { align-items: flex-start; }
+        .justify-between { justify-content: space-between; }
+        .justify-center { justify-content: center; }
+        .flex-col { flex-direction: column; }
+        .min-w-0 { min-width: 0; }
+        .min-h-screen { min-height: 100vh; }
+        .space-y-2 > * + * { margin-top: 0.5rem; }
+        .space-y-3 > * + * { margin-top: 0.75rem; }
+        .space-y-4 > * + * { margin-top: 1rem; }
+        .overflow-x-auto { overflow-x: auto; }
+        .sticky { position: sticky; }
+        .top-0 { top: 0; }
+        .relative { position: relative; }
+        .absolute { position: absolute; }
+        .rounded-full { border-radius: 9999px; }
+        .rounded-lg { border-radius: 0.5rem; }
+        .rounded-xl { border-radius: 0.75rem; }
+        .py-1 { padding-block: 0.25rem; }
+        .py-2 { padding-block: 0.5rem; }
+        .py-3 { padding-block: 0.75rem; }
+        .py-4 { padding-block: 1rem; }
+        .py-6 { padding-block: 1.5rem; }
+        .py-8 { padding-block: 2rem; }
+        .py-12 { padding-block: 3rem; }
+        .px-2 { padding-inline: 0.5rem; }
+        .px-3 { padding-inline: 0.75rem; }
+        .px-4 { padding-inline: 1rem; }
+        .px-6 { padding-inline: 1.5rem; }
+        .text-xs { font-size: 0.75rem; }
+        .text-sm { font-size: 0.875rem; }
+        .text-lg { font-size: 1.125rem; }
+        .text-xl { font-size: 1.25rem; }
 
-        /* === v3.0 专用补充样式 === */
+        /* === 通用样式 === */
         .stat-card { background: rgba(30,41,59,0.9); border:1px solid rgba(148,163,184,0.08); border-radius:12px; padding:14px 12px; }
         .stat-value { font-size: 28px; font-weight: 700; line-height: 1.1; }
         .case-item { background: rgba(30,41,59,0.85); border:1px solid rgba(148,163,184,0.06); border-radius:10px; padding:14px; margin-bottom:8px; cursor:pointer; transition: all 0.15s; }
         .case-item:active { transform: scale(0.99); background: rgba(30,41,59,1); }
-        .status-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 6px; }
+        .case-item.selected { border-color: #f97316; background: rgba(249,115,22,0.06); }
+        .status-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 6px; flex-shrink: 0; }
         .status-pending { background: #f59e0b; }
         .status-contacted { background: #3b82f6; }
         .status-promised { background: #10b981; }
@@ -54,6 +122,8 @@
         .btn-primary { background:#f97316; color:white; border:none; padding:12px 24px; border-radius:10px; font-weight:600; font-size:15px; cursor:pointer; }
         .btn-primary:active { opacity:0.9; }
         .btn-secondary { background:rgba(148,163,184,0.1); color:#e2e8f0; border:1px solid rgba(148,163,184,0.2); padding:10px 20px; border-radius:10px; font-size:14px; cursor:pointer; }
+        .btn-danger { background:rgba(239,68,68,0.15); color:#ef4444; border:1px solid rgba(239,68,68,0.3); padding:10px 20px; border-radius:10px; font-size:14px; cursor:pointer; }
+        .btn-sm { padding:6px 14px; font-size:12px; border-radius:8px; }
         .tag { display:inline-block; padding:2px 8px; border-radius:4px; font-size:11px; font-weight:600; }
         .tag-ms { background:rgba(249,115,22,0.15); color:#f97316; }
         .tag-ayh { background:rgba(59,130,246,0.15); color:#3b82f6; }
@@ -61,77 +131,275 @@
         .backup-status { font-size:12px; padding:6px 12px; border-radius:20px; display:inline-block; }
         .synced { background:rgba(16,185,129,0.15); color:#10b981; }
         .unsynced { background:rgba(245,158,11,0.15); color:#f59e0b; }
+
+        /* === v3.1+ 新增样式 === */
+        /* 主Tab导航 */
+        .main-nav { display: flex; gap: 4px; background: rgba(15,23,42,0.95); border-radius: 12px; padding: 4px; border: 1px solid rgba(148,163,184,0.08); }
+        .main-nav-btn { flex: 1; padding: 10px 8px; border-radius: 10px; border: none; background: transparent; color: #94a3b8; font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.2s; white-space: nowrap; min-height: 44px; display: flex; align-items: center; justify-content: center; gap: 4px; }
+        .main-nav-btn.active { background: rgba(249,115,22,0.15); color: #f97316; }
+
+        /* 跟进提醒 */
+        .reminder-alert { background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.2); border-radius: 10px; padding: 12px 14px; margin-bottom: 12px; cursor: pointer; transition: all 0.15s; }
+        .reminder-alert:active { background: rgba(245,158,11,0.12); }
+        .reminder-overdue { background: rgba(239,68,68,0.08); border-color: rgba(239,68,68,0.2); }
+
+        /* 批量操作 */
+        .batch-bar { display: none; background: rgba(249,115,22,0.08); border: 1px solid rgba(249,115,22,0.2); border-radius: 10px; padding: 10px 14px; margin-bottom: 10px; }
+        .batch-bar.show { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .batch-checkbox { width: 22px; height: 22px; accent-color: #f97316; cursor: pointer; flex-shrink: 0; margin: 0; }
+
+        /* 话术模板 */
+        .template-card { background: rgba(30,41,59,0.6); border: 1px solid rgba(148,163,184,0.08); border-radius: 8px; padding: 10px 12px; margin-bottom: 8px; transition: all 0.15s; }
+        .template-card:hover { border-color: rgba(148,163,184,0.2); }
+        .template-card .template-text { font-size: 13px; line-height: 1.6; color: #cbd5e1; white-space: pre-wrap; max-height: 120px; overflow-y: auto; margin: 8px 0; }
+
+        /* 知识库卡片 */
+        .kb-card { background: rgba(30,41,59,0.7); border: 1px solid rgba(148,163,184,0.08); border-radius: 10px; overflow: hidden; margin-bottom: 8px; }
+        .kb-card-header { padding: 12px 14px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; min-height: 44px; }
+        .kb-card-header:active { background: rgba(148,163,184,0.05); }
+        .kb-card-body { display: none; padding: 0 14px 14px; font-size: 13px; line-height: 1.7; color: #94a3b8; }
+        .kb-card-body.show { display: block; }
+        .kb-card-body h4 { color: #e2e8f0; font-size: 14px; margin: 10px 0 6px; }
+        .kb-card-body ul { padding-left: 16px; margin: 6px 0; }
+        .kb-card-body li { margin-bottom: 4px; }
+        .kb-arrow { transition: transform 0.2s; font-size: 12px; color: #64748b; }
+        .kb-arrow.open { transform: rotate(180deg); }
+
+        /* 业绩看板 */
+        .perf-metric { background: rgba(30,41,59,0.9); border: 1px solid rgba(148,163,184,0.08); border-radius: 10px; padding: 14px; }
+        .chart-container { background: rgba(30,41,59,0.7); border: 1px solid rgba(148,163,184,0.08); border-radius: 12px; padding: 14px; margin-bottom: 14px; }
+        .chart-container canvas { max-height: 260px; }
+
+        /* 周报 */
+        .report-box { background: rgba(30,41,59,0.7); border: 1px solid rgba(148,163,184,0.1); border-radius: 12px; padding: 16px; white-space: pre-wrap; font-size: 14px; line-height: 1.8; max-height: 500px; overflow-y: auto; color: #cbd5e1; }
+        .report-box h3 { color: #f97316; font-size: 16px; font-weight: 700; margin: 12px 0 6px; }
+        .report-box h3:first-child { margin-top: 0; }
+
+        /* Toast通知 */
+        .toast { position: fixed; top: 16px; left: 50%; transform: translateX(-50%); z-index: 200; background: #1e293b; color: #e2e8f0; padding: 12px 24px; border-radius: 10px; font-size: 14px; border: 1px solid rgba(148,163,184,0.2); box-shadow: 0 8px 32px rgba(0,0,0,0.5); animation: toastIn 0.3s ease-out; pointer-events: none; max-width: 90vw; text-align: center; }
+        .toast.warning { border-color: #f59e0b; background: rgba(245,158,11,0.1); }
+        .toast.error { border-color: #ef4444; background: rgba(239,68,68,0.1); }
+        .toast.success { border-color: #10b981; background: rgba(16,185,129,0.1); }
+        @keyframes toastIn { from { opacity: 0; transform: translateX(-50%) translateY(-20px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
+        @keyframes toastOut { from { opacity: 1; } to { opacity: 0; transform: translateX(-50%) translateY(-20px); } }
+
+        /* 漏斗图 */
+        .funnel-bar { height: 32px; border-radius: 6px; margin-bottom: 6px; display: flex; align-items: center; padding: 0 10px; font-size: 12px; font-weight: 600; color: white; transition: all 0.3s; }
+        .funnel-bar:nth-child(1) { background: #f59e0b; }
+        .funnel-bar:nth-child(2) { background: #3b82f6; }
+        .funnel-bar:nth-child(3) { background: #10b981; }
+        .funnel-bar:nth-child(4) { background: #6b7280; }
     </style>
 </head>
 <body class="bg-slate-950 text-slate-200 min-h-screen">
 
     <!-- Header -->
     <header class="border-b border-slate-800 bg-slate-900/90 sticky top-0 z-50 backdrop-blur-sm">
-        <div class="max-w-2xl mx-auto px-4 py-3 flex items-center justify-between">
-            <div>
-                <h1 class="text-lg font-bold">📋 催收工作台</h1>
-                <p class="text-xs text-slate-400">v3.0 · 案件管理</p>
+        <div class="max-w-3xl mx-auto px-4 py-3">
+            <div class="flex items-center justify-between mb-2">
+                <div>
+                    <h1 class="text-lg font-bold">📋 催收工作台</h1>
+                    <p class="text-xs text-slate-400">v3.2 · 智能案件管理</p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span id="syncBadge" class="backup-status synced">✓ 已同步</span>
+                    <button onclick="openSettings()" class="text-slate-400 hover:text-white px-2 min-h-[44px] min-w-[44px]">⚙️</button>
+                </div>
             </div>
-            <div class="flex items-center gap-2">
-                <span id="syncBadge" class="backup-status synced">✓ 已同步</span>
-                <button onclick="openSettings()" class="text-slate-400 hover:text-white px-2">⚙️</button>
-            </div>
+            <!-- 主Tab导航 -->
+            <nav class="main-nav" id="mainNav">
+                <button class="main-nav-btn active" data-tab="tabCases">📋 案件管理</button>
+                <button class="main-nav-btn" data-tab="tabDashboard">📊 业绩看板</button>
+                <button class="main-nav-btn" data-tab="tabKnowledge">📚 知识库</button>
+                <button class="main-nav-btn" data-tab="tabReport">📝 周报</button>
+            </nav>
         </div>
     </header>
 
-    <main class="max-w-2xl mx-auto px-4 pb-24">
+    <main class="max-w-3xl mx-auto px-4 pb-24">
 
-        <!-- Dashboard Stats -->
-        <section class="my-4">
-            <div class="grid grid-cols-4 gap-2">
-                <div class="stat-card text-center">
-                    <div class="stat-value text-amber-400" id="statPending">0</div>
-                    <div class="text-xs text-slate-400 mt-1">待联系</div>
+        <!-- ==================== Tab: 案件管理 ==================== -->
+        <div id="tabCases" class="main-tab">
+            <!-- 跟进提醒 -->
+            <section id="reminderAlert" class="my-3 hidden"></section>
+
+            <!-- Dashboard Stats -->
+            <section class="my-4">
+                <div class="grid grid-cols-4 gap-2">
+                    <div class="stat-card text-center">
+                        <div class="stat-value text-amber-400" id="statPending">0</div>
+                        <div class="text-xs text-slate-400 mt-1">待联系</div>
+                    </div>
+                    <div class="stat-card text-center">
+                        <div class="stat-value text-blue-400" id="statContacted">0</div>
+                        <div class="text-xs text-slate-400 mt-1">已联系</div>
+                    </div>
+                    <div class="stat-card text-center">
+                        <div class="stat-value text-emerald-400" id="statPromised">0</div>
+                        <div class="text-xs text-slate-400 mt-1">已承诺</div>
+                    </div>
+                    <div class="stat-card text-center">
+                        <div class="stat-value text-slate-400" id="statResolved">0</div>
+                        <div class="text-xs text-slate-400 mt-1">已结案</div>
+                    </div>
                 </div>
-                <div class="stat-card text-center">
-                    <div class="stat-value text-blue-400" id="statContacted">0</div>
-                    <div class="text-xs text-slate-400 mt-1">已联系</div>
-                </div>
-                <div class="stat-card text-center">
-                    <div class="stat-value text-emerald-400" id="statPromised">0</div>
-                    <div class="text-xs text-slate-400 mt-1">已承诺</div>
-                </div>
-                <div class="stat-card text-center">
-                    <div class="stat-value text-slate-400" id="statResolved">0</div>
-                    <div class="text-xs text-slate-400 mt-1">已结案</div>
-                </div>
+            </section>
+
+            <!-- 批量操作栏 -->
+            <div class="batch-bar" id="batchBar">
+                <label class="flex items-center gap-1 text-xs text-slate-400 min-h-[44px]" style="cursor:pointer">
+                    <input type="checkbox" class="batch-checkbox" id="selectAllCheckbox" onchange="toggleSelectAll()">
+                    全选
+                </label>
+                <span class="text-xs text-slate-500" id="batchCount">已选 0</span>
+                <div class="flex-1"></div>
+                <button class="btn-secondary btn-sm" onclick="batchChangeStatus()">改状态</button>
+                <button class="btn-danger btn-sm" onclick="batchDelete()">删除</button>
+                <button class="btn-secondary btn-sm" onclick="batchExport()">导出JSON</button>
+                <button class="btn-secondary btn-sm" onclick="toggleBatchMode()">退出</button>
             </div>
-        </section>
 
-        <!-- Status Filter -->
-        <section class="my-3 flex gap-2 overflow-x-auto pb-1" id="filterTabs">
-            <span class="filter-tab active" data-filter="all">全部</span>
-            <span class="filter-tab" data-filter="pending">待联系</span>
-            <span class="filter-tab" data-filter="contacted">已联系</span>
-            <span class="filter-tab" data-filter="promised">已承诺</span>
-            <span class="filter-tab" data-filter="resolved">已结案</span>
-            <span class="filter-tab" data-filter="failed">失败</span>
-        </section>
+            <!-- 案件列表工具栏 -->
+            <section class="my-3 flex items-center justify-between">
+                <div class="flex gap-2 overflow-x-auto pb-1" id="filterTabs">
+                    <span class="filter-tab active" data-filter="all">全部</span>
+                    <span class="filter-tab" data-filter="pending">待联系</span>
+                    <span class="filter-tab" data-filter="contacted">已联系</span>
+                    <span class="filter-tab" data-filter="promised">已承诺</span>
+                    <span class="filter-tab" data-filter="resolved">已结案</span>
+                    <span class="filter-tab" data-filter="failed">失败</span>
+                </div>
+                <button class="btn-secondary btn-sm flex-shrink-0 ml-2" onclick="toggleBatchMode()" title="批量操作">☑ 批量</button>
+            </section>
 
-        <!-- Case List -->
-        <section id="caseList">
-            <div class="text-center text-slate-500 py-12" id="emptyState">
-                <div class="text-4xl mb-3">📭</div>
-                <p>暂无案件，点击右下角 + 添加</p>
-            </div>
-        </section>
+            <!-- Case List -->
+            <section id="caseList">
+                <div class="text-center text-slate-500 py-12" id="emptyState">
+                    <div class="text-4xl mb-3">📭</div>
+                    <p>暂无案件，点击右下角 + 添加</p>
+                </div>
+            </section>
+        </div>
+
+        <!-- ==================== Tab: 业绩看板 ==================== -->
+        <div id="tabDashboard" class="main-tab hidden">
+            <section class="my-4">
+                <!-- 今日数据 -->
+                <h3 class="text-sm font-medium text-slate-400 mb-2">📅 今日数据</h3>
+                <div class="grid grid-cols-4 gap-2 mb-4">
+                    <div class="stat-card text-center">
+                        <div class="stat-value text-blue-400" id="perfTodayContacts">0</div>
+                        <div class="text-xs text-slate-400 mt-1">联系次数</div>
+                    </div>
+                    <div class="stat-card text-center">
+                        <div class="stat-value text-emerald-400" id="perfTodayPromises">0</div>
+                        <div class="text-xs text-slate-400 mt-1">承诺数</div>
+                    </div>
+                    <div class="stat-card text-center">
+                        <div class="stat-value text-slate-400" id="perfTodayResolved">0</div>
+                        <div class="text-xs text-slate-400 mt-1">结案数</div>
+                    </div>
+                    <div class="stat-card text-center">
+                        <div class="stat-value text-amber-400" id="perfTodayAmount">0</div>
+                        <div class="text-xs text-slate-400 mt-1">回收(万)</div>
+                    </div>
+                </div>
+
+                <!-- 本周趋势图 -->
+                <div class="chart-container">
+                    <h4 class="text-xs text-slate-400 mb-2">📈 本周趋势</h4>
+                    <canvas id="weeklyTrendChart"></canvas>
+                </div>
+
+                <!-- 产品分布饼图 -->
+                <div class="chart-container">
+                    <h4 class="text-xs text-slate-400 mb-2">🥧 产品分布</h4>
+                    <canvas id="productPieChart"></canvas>
+                </div>
+
+                <!-- 状态转化漏斗 -->
+                <div class="chart-container">
+                    <h4 class="text-xs text-slate-400 mb-3">🔽 状态转化漏斗</h4>
+                    <div id="funnelContainer"></div>
+                </div>
+
+                <!-- 关键指标 -->
+                <div class="chart-container">
+                    <h4 class="text-xs text-slate-400 mb-3">📊 关键指标</h4>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div class="perf-metric">
+                            <div class="text-xs text-slate-400">平均逾期天数</div>
+                            <div class="text-xl font-bold text-slate-200" id="kpiAvgOverdue">0</div>
+                        </div>
+                        <div class="perf-metric">
+                            <div class="text-xs text-slate-400">平均回款率</div>
+                            <div class="text-xl font-bold text-emerald-400" id="kpiRecoveryRate">0%</div>
+                        </div>
+                        <div class="perf-metric">
+                            <div class="text-xs text-slate-400">单案平均金额</div>
+                            <div class="text-xl font-bold text-amber-400" id="kpiAvgAmount">0</div>
+                        </div>
+                        <div class="perf-metric">
+                            <div class="text-xs text-slate-400">本周转化率</div>
+                            <div class="text-xl font-bold text-blue-400" id="kpiConversionRate">0%</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- ==================== Tab: 知识库 ==================== -->
+        <div id="tabKnowledge" class="main-tab hidden">
+            <section class="my-4">
+                <!-- 搜索框 -->
+                <div class="mb-3">
+                    <input type="text" id="kbSearch" class="input-field" placeholder="🔍 搜索知识库..." oninput="renderKnowledgeBase()">
+                </div>
+                <!-- 分类筛选 -->
+                <div class="flex gap-2 overflow-x-auto pb-1 mb-3" id="kbCategoryTabs">
+                    <span class="filter-tab active" data-kbcat="all">全部</span>
+                    <span class="filter-tab" data-kbcat="法律法规">法律法规</span>
+                    <span class="filter-tab" data-kbcat="催收技巧">催收技巧</span>
+                    <span class="filter-tab" data-kbcat="常见问题">常见问题</span>
+                    <span class="filter-tab" data-kbcat="话术模板库">话术模板库</span>
+                </div>
+                <!-- 知识库列表 -->
+                <div id="kbList"></div>
+            </section>
+        </div>
+
+        <!-- ==================== Tab: 周报 ==================== -->
+        <div id="tabReport" class="main-tab hidden">
+            <section class="my-4">
+                <div class="flex gap-2 mb-3">
+                    <button onclick="generateWeeklyReport()" class="btn-primary flex-1">📝 生成本周周报</button>
+                </div>
+                <div id="reportActions" class="flex gap-2 mb-3 hidden">
+                    <button onclick="copyReport()" class="btn-secondary flex-1 btn-sm">📋 复制文本</button>
+                    <button onclick="exportReportMD()" class="btn-secondary flex-1 btn-sm">💾 导出Markdown</button>
+                </div>
+                <div id="reportContent" class="report-box hidden"></div>
+                <div id="reportEmpty" class="text-center text-slate-500 py-8">
+                    <div class="text-4xl mb-3">📝</div>
+                    <p>点击上方按钮生成本周工作总结</p>
+                </div>
+            </section>
+        </div>
 
     </main>
 
-    <!-- FAB Add Button -->
-    <button class="fab" onclick="openAddCase()" title="添加案件">+</button>
+    <!-- FAB Add Button (仅案件管理Tab显示) -->
+    <button class="fab" id="fabAdd" onclick="openAddCase()" title="添加案件">+</button>
+
+    <!-- Toast 通知 -->
+    <div id="toast" class="toast" style="display:none"></div>
 
     <!-- Add Case Modal -->
     <div class="modal-overlay" id="addCaseModal">
         <div class="modal-sheet">
             <div class="flex items-center justify-between mb-5">
                 <h2 class="text-lg font-bold">新建案件</h2>
-                <button onclick="closeAddCase()" class="text-slate-400 text-xl">&times;</button>
+                <button onclick="closeAddCase()" class="text-slate-400 text-xl min-h-[44px] min-w-[44px]">&times;</button>
             </div>
             <form onsubmit="addCase(event)" class="space-y-4">
                 <div>
@@ -164,12 +432,34 @@
         <div class="modal-sheet" id="detailContent"></div>
     </div>
 
+    <!-- Reminder Date-Time Picker Modal -->
+    <div class="modal-overlay" id="reminderModal">
+        <div class="modal-sheet">
+            <div class="flex items-center justify-between mb-5">
+                <h2 class="text-lg font-bold">⏰ 设置跟进提醒</h2>
+                <button onclick="closeReminderModal()" class="text-slate-400 text-xl min-h-[44px] min-w-[44px]">&times;</button>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm text-slate-400 mb-1.5">提醒日期</label>
+                    <input type="date" id="reminderDate" class="input-field">
+                </div>
+                <div>
+                    <label class="block text-sm text-slate-400 mb-1.5">提醒时间</label>
+                    <input type="time" id="reminderTime" class="input-field">
+                </div>
+                <button onclick="saveReminder()" class="btn-primary w-full">保存提醒</button>
+                <button onclick="clearReminder()" class="btn-secondary w-full text-sm">清除提醒</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Settings Modal -->
     <div class="modal-overlay" id="settingsModal">
         <div class="modal-sheet">
             <div class="flex items-center justify-between mb-5">
                 <h2 class="text-lg font-bold">⚙️ 设置</h2>
-                <button onclick="closeSettings()" class="text-slate-400 text-xl">&times;</button>
+                <button onclick="closeSettings()" class="text-slate-400 text-xl min-h-[44px] min-w-[44px]">&times;</button>
             </div>
             <div class="space-y-4">
                 <div>
@@ -181,7 +471,7 @@
                 <button onclick="importDataPrompt()" class="btn-secondary w-full">📥 导入数据备份</button>
                 <hr class="border-slate-700">
                 <p class="text-xs text-slate-500">数据存储: localStorage · 手机内部存储</p>
-                <p class="text-xs text-slate-500">版本: v3.0 · 催收工作台</p>
+                <p class="text-xs text-slate-500">版本: v3.2 · 催收工作台</p>
             </div>
         </div>
     </div>
