@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>催收工作台 v3.0</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="tailwind-output.css">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="mobile-styles.css">
+    <style>
+        /* v3.0 专用补充样式 */
+        .stat-card { background: rgba(30,41,59,0.9); border:1px solid rgba(148,163,184,0.08); border-radius:12px; padding:14px 12px; }
+        .stat-value { font-size: 28px; font-weight: 700; line-height: 1.1; }
+        .case-item { background: rgba(30,41,59,0.85); border:1px solid rgba(148,163,184,0.06); border-radius:10px; padding:14px; margin-bottom:8px; cursor:pointer; transition: all 0.15s; }
+        .case-item:active { transform: scale(0.99); background: rgba(30,41,59,1); }
+        .status-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 6px; }
+        .status-pending { background: #f59e0b; }
+        .status-contacted { background: #3b82f6; }
+        .status-promised { background: #10b981; }
+        .status-resolved { background: #6b7280; }
+        .status-failed { background: #ef4444; }
+        .filter-tab { padding: 8px 14px; border-radius: 20px; font-size:13px; font-weight:500; cursor:pointer; border:1px solid rgba(148,163,184,0.15); white-space:nowrap; transition:all 0.15s; }
+        .filter-tab.active { background: #f97316; color: white; border-color: #f97316; }
+        .modal-overlay { position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.7); z-index:100; display:none; align-items:flex-end; justify-content:center; }
+        .modal-overlay.show { display:flex; }
+        .modal-sheet { background:#0f172a; width:100%; max-width:600px; max-height:90vh; border-radius:20px 20px 0 0; overflow-y:auto; padding:20px; animation:slideUp 0.25s ease-out; }
+        @keyframes slideUp { from { transform:translateY(100%); } to { transform:translateY(0); } }
+        .tab-btn { padding:8px 16px; font-size:14px; border-bottom:2px solid transparent; cursor:pointer; }
+        .tab-btn.active { border-bottom-color:#f97316; color:#f97316; }
+        .fab { position:fixed; bottom:24px; right:24px; width:56px; height:56px; border-radius:50%; background:#f97316; color:white; font-size:28px; border:none; box-shadow:0 4px 16px rgba(249,115,22,0.4); cursor:pointer; z-index:90; display:flex; align-items:center; justify-content:center; }
+        .fab:active { transform:scale(0.95); }
+        .input-field { width:100%; padding:12px; background:rgba(30,41,59,0.8); border:1px solid rgba(148,163,184,0.15); border-radius:10px; color:white; font-size:15px; }
+        .input-field:focus { outline:none; border-color:#f97316; }
+        .btn-primary { background:#f97316; color:white; border:none; padding:12px 24px; border-radius:10px; font-weight:600; font-size:15px; cursor:pointer; }
+        .btn-primary:active { opacity:0.9; }
+        .btn-secondary { background:rgba(148,163,184,0.1); color:#e2e8f0; border:1px solid rgba(148,163,184,0.2); padding:10px 20px; border-radius:10px; font-size:14px; cursor:pointer; }
+        .tag { display:inline-block; padding:2px 8px; border-radius:4px; font-size:11px; font-weight:600; }
+        .tag-ms { background:rgba(249,115,22,0.15); color:#f97316; }
+        .tag-ayh { background:rgba(59,130,246,0.15); color:#3b82f6; }
+        .tag-other { background:rgba(148,163,184,0.15); color:#94a3b8; }
+        .backup-status { font-size:12px; padding:6px 12px; border-radius:20px; display:inline-block; }
+        .synced { background:rgba(16,185,129,0.15); color:#10b981; }
+        .unsynced { background:rgba(245,158,11,0.15); color:#f59e0b; }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-200 min-h-screen">
+
+    <!-- Header -->
+    <header class="border-b border-slate-800 bg-slate-900/90 sticky top-0 z-50 backdrop-blur-sm">
+        <div class="max-w-2xl mx-auto px-4 py-3 flex items-center justify-between">
+            <div>
+                <h1 class="text-lg font-bold">📋 催收工作台</h1>
+                <p class="text-xs text-slate-400">v3.0 · 案件管理</p>
+            </div>
+            <div class="flex items-center gap-2">
+                <span id="syncBadge" class="backup-status synced">✓ 已同步</span>
+                <button onclick="openSettings()" class="text-slate-400 hover:text-white px-2">⚙️</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-2xl mx-auto px-4 pb-24">
+
+        <!-- Dashboard Stats -->
+        <section class="my-4">
+            <div class="grid grid-cols-4 gap-2">
+                <div class="stat-card text-center">
+                    <div class="stat-value text-amber-400" id="statPending">0</div>
+                    <div class="text-xs text-slate-400 mt-1">待联系</div>
+                </div>
+                <div class="stat-card text-center">
+                    <div class="stat-value text-blue-400" id="statContacted">0</div>
+                    <div class="text-xs text-slate-400 mt-1">已联系</div>
+                </div>
+                <div class="stat-card text-center">
+                    <div class="stat-value text-emerald-400" id="statPromised">0</div>
+                    <div class="text-xs text-slate-400 mt-1">已承诺</div>
+                </div>
+                <div class="stat-card text-center">
+                    <div class="stat-value text-slate-400" id="statResolved">0</div>
+                    <div class="text-xs text-slate-400 mt-1">已结案</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Status Filter -->
+        <section class="my-3 flex gap-2 overflow-x-auto pb-1" id="filterTabs">
+            <span class="filter-tab active" data-filter="all">全部</span>
+            <span class="filter-tab" data-filter="pending">待联系</span>
+            <span class="filter-tab" data-filter="contacted">已联系</span>
+            <span class="filter-tab" data-filter="promised">已承诺</span>
+            <span class="filter-tab" data-filter="resolved">已结案</span>
+            <span class="filter-tab" data-filter="failed">失败</span>
+        </section>
+
+        <!-- Case List -->
+        <section id="caseList">
+            <div class="text-center text-slate-500 py-12" id="emptyState">
+                <div class="text-4xl mb-3">📭</div>
+                <p>暂无案件，点击右下角 + 添加</p>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FAB Add Button -->
+    <button class="fab" onclick="openAddCase()" title="添加案件">+</button>
+
+    <!-- Add Case Modal -->
+    <div class="modal-overlay" id="addCaseModal">
+        <div class="modal-sheet">
+            <div class="flex items-center justify-between mb-5">
+                <h2 class="text-lg font-bold">新建案件</h2>
+                <button onclick="closeAddCase()" class="text-slate-400 text-xl">&times;</button>
+            </div>
+            <form onsubmit="addCase(event)" class="space-y-4">
+                <div>
+                    <label class="block text-sm text-slate-400 mb-1.5">客户姓名 *</label>
+                    <input type="text" id="caseName" class="input-field" placeholder="张三" required>
+                </div>
+                <div>
+                    <label class="block text-sm text-slate-400 mb-1.5">借款金额（元）*</label>
+                    <input type="number" id="caseAmount" class="input-field" placeholder="12000" min="0" step="0.01" required>
+                </div>
+                <div>
+                    <label class="block text-sm text-slate-400 mb-1.5">产品类型 *</label>
+                    <select id="caseProduct" class="input-field">
+                        <option value="马上金融">马上金融</option>
+                        <option value="安逸花">安逸花</option>
+                        <option value="其他">其他</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm text-slate-400 mb-1.5">逾期天数 *</label>
+                    <input type="number" id="caseOverdue" class="input-field" placeholder="90" min="0" required>
+                </div>
+                <button type="submit" class="btn-primary w-full">创建案件</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Case Detail Modal -->
+    <div class="modal-overlay" id="detailModal">
+        <div class="modal-sheet" id="detailContent"></div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div class="modal-overlay" id="settingsModal">
+        <div class="modal-sheet">
+            <div class="flex items-center justify-between mb-5">
+                <h2 class="text-lg font-bold">⚙️ 设置</h2>
+                <button onclick="closeSettings()" class="text-slate-400 text-xl">&times;</button>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm text-slate-400 mb-1.5">GitHub Token（用于同步）</label>
+                    <input type="password" id="githubToken" class="input-field" placeholder="ghp_xxxx">
+                </div>
+                <button onclick="syncNow()" class="btn-primary w-full">🔄 手动同步</button>
+                <button onclick="exportData()" class="btn-secondary w-full">📤 导出数据备份</button>
+                <button onclick="importDataPrompt()" class="btn-secondary w-full">📥 导入数据备份</button>
+                <hr class="border-slate-700">
+                <p class="text-xs text-slate-500">数据存储: localStorage · 手机内部存储</p>
+                <p class="text-xs text-slate-500">版本: v3.0 · 催收工作台</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script src="pwa-install.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</body>
+</html>
