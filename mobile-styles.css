@@ -1,0 +1,204 @@
+/* ============ 手机端优化样式 ============ */
+
+/* 移动端基础优化 */
+@media (max-width: 768px) {
+    /* 增大按钮和输入框，提升触摸体验 */
+    input[type="number"],
+    input[type="text"],
+    input[type="date"],
+    select,
+    textarea {
+        font-size: 16px !important; /* 防止iOS自动缩放 */
+        padding: 12px !important;
+        min-height: 44px; /* 最小触摸目标 */
+    }
+
+    /* 增大按钮 */
+    button,
+    .btn,
+    [type="button"],
+    [type="submit"] {
+        min-height: 44px;
+        padding: 12px 20px !important;
+        font-size: 16px !important;
+    }
+
+    /* 优化表格在手机上的显示 */
+    table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* 优化卡片布局 */
+    .glass-panel {
+        padding: 16px !important;
+        margin-bottom: 16px !important;
+    }
+
+    /* 优化标题大小 */
+    h1 {
+        font-size: 1.5rem !important;
+    }
+    
+    h2 {
+        font-size: 1.25rem !important;
+    }
+    
+    h3 {
+        font-size: 1.125rem !important;
+    }
+
+    /* 优化间距 */
+    .space-y-6 > * + * {
+        margin-top: 1rem !important;
+    }
+
+    .p-6 {
+        padding: 1rem !important;
+    }
+
+    .px-6 {
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+    }
+
+    .py-4 {
+        padding-top: 0.75rem !important;
+        padding-bottom: 0.75rem !important;
+    }
+
+    /* 优化网格布局 */
+    .grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    .md\:grid-cols-2 {
+        grid-template-columns: 1fr !important;
+    }
+
+    .lg\:grid-cols-3 {
+        grid-template-columns: 1fr !important;
+    }
+
+    /* 优化滚动 */
+    .overflow-x-auto {
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* 优化模态框 */
+    .modal-content {
+        width: 95% !important;
+        max-width: none !important;
+        margin: 10px !important;
+        max-height: 90vh !important;
+        overflow-y: auto;
+    }
+
+    /* 隐藏桌面端元素 */
+    .desktop-only {
+        display: none !important;
+    }
+
+    /* 显示移动端元素 */
+    .mobile-only {
+        display: block !important;
+    }
+}
+
+/* 移动端专用类 */
+.mobile-only {
+    display: none;
+}
+
+.desktop-only {
+    display: block;
+}
+
+/* 优化触摸反馈 */
+@media (hover: none) and (pointer: coarse) {
+    button:active,
+    [type="button"]:active,
+    [type="submit"]:active {
+        transform: scale(0.98);
+        opacity: 0.9;
+    }
+
+    a:active {
+        opacity: 0.7;
+    }
+}
+
+/* 优化滚动条（移动端） */
+@media (max-width: 768px) {
+    ::-webkit-scrollbar {
+        width: 4px;
+        height: 4px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: rgba(249, 115, 22, 0.3);
+        border-radius: 2px;
+    }
+}
+
+/* 优化PWA安装提示 */
+.pwa-install-prompt {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+    color: white;
+    padding: 16px;
+    z-index: 9999;
+    display: none;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.pwa-install-prompt.show {
+    display: block;
+    animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(100%);
+    }
+    to {
+        transform: translateY(0);
+    }
+}
+
+.pwa-install-prompt button {
+    background: white;
+    color: #f97316;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    margin-left: 10px;
+}
+
+/* 优化离线提示 */
+.offline-notice {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: #ef4444;
+    color: white;
+    padding: 10px;
+    text-align: center;
+    z-index: 9998;
+    display: none;
+}
+
+.offline-notice.show {
+    display: block;
+}
