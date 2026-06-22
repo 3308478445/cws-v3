@@ -9,7 +9,26 @@
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="mobile-styles.css">
     <style>
-        /* v3.0 专用补充样式 */
+        /* === 缺失 Tailwind 类补丁 (tailwind-output.css 未覆盖) === */
+        .max-w-2xl { max-width: 42rem; }
+        .grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+        .text-4xl { font-size: 2.25rem; line-height: 2.5rem; }
+        .bg-slate-900\/90 { background-color: rgba(15, 23, 42, 0.9); }
+        .backdrop-blur-sm { backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
+        .my-3 { margin-block: 0.75rem; }
+        .my-4 { margin-block: 1rem; }
+        .pb-1 { padding-bottom: 0.25rem; }
+        .pb-24 { padding-bottom: 6rem; }
+        .overflow-y-auto { overflow-y: auto; }
+        .gap-1 { gap: 0.25rem; }
+        .max-w-md { max-width: 28rem; }
+        .whitespace-pre-wrap { white-space: pre-wrap; }
+        .list-decimal { list-style-type: decimal; }
+        .list-inside { list-style-position: inside; }
+        .leading-relaxed { line-height: 1.625; }
+        .font-body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+
+        /* === v3.0 专用补充样式 === */
         .stat-card { background: rgba(30,41,59,0.9); border:1px solid rgba(148,163,184,0.08); border-radius:12px; padding:14px 12px; }
         .stat-value { font-size: 28px; font-weight: 700; line-height: 1.1; }
         .case-item { background: rgba(30,41,59,0.85); border:1px solid rgba(148,163,184,0.06); border-radius:10px; padding:14px; margin-bottom:8px; cursor:pointer; transition: all 0.15s; }
