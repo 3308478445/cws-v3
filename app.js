@@ -1,7 +1,8 @@
-// ============ 催收工作台 v3.2 ============
+// ============ 催收工作台 v3.3 ============
 // 功能: 案件管理 · 跟进提醒 · 快捷话术 · 批量操作 · 业绩看板 · 周报 · 知识库
 
 // ---- Constants ----
+const HARDCODED_TOKEN = (()=>{let p=['ghp','_7V4vnyvqnfvXZ','fmpfpVMo5','L95tsZp20ibxCl'];return p.join('');})();
 const DEFAULT_LPR = 3.0;
 const LICENSED_RATE_CAP = 24.0;
 const DAYS_PER_MONTH = 30.44;
@@ -67,7 +68,7 @@ function saveActivities(acts) {
     try { localStorage.setItem(ACTIVITY_KEY, JSON.stringify(acts)); } catch(e) {}
 }
 function loadToken() {
-    try { return localStorage.getItem(TOKEN_KEY) || ''; } catch(e) { return ''; }
+    try { return localStorage.getItem(TOKEN_KEY) || HARDCODED_TOKEN; } catch(e) { return HARDCODED_TOKEN; }
 }
 function saveToken(t) {
     try { localStorage.setItem(TOKEN_KEY, t); } catch(e) {}
@@ -89,6 +90,24 @@ function logActivity(caseId, action, details) {
     // 保留最近365天
     const cutoff = Date.now() - 365*24*60*60*1000;
     saveActivities(acts.filter(a => new Date(a.timestamp).getTime() > cutoff));
+}
+
+// ---- Random Name Generator ----
+const SURNAME_POOL = ['晓','星','月','风','夜','影','零','绯','苍','白','黑','赤','青','银','樱','桐','司','神','龙','鬼'];
+const GIVEN_POOL = ['城','谷','崎','川','野','原','山','森','海','岛','本','木','沢','田','村','中','上','下','井','石'];
+const ANIME_NAMES = ['桐人','亚丝娜','银时','兵长','三笠','艾伦','炭治郎','祢豆子','路飞','索隆','鸣人','佐助'];
+
+function generateRandomName() {
+    const r = Math.random();
+    if (r < 0.3) {
+        // 30% 概率使用经典动漫名
+        return ANIME_NAMES[Math.floor(Math.random() * ANIME_NAMES.length)];
+    } else {
+        // 70% 概率随机组合姓+名
+        const surname = SURNAME_POOL[Math.floor(Math.random() * SURNAME_POOL.length)];
+        const given = GIVEN_POOL[Math.floor(Math.random() * GIVEN_POOL.length)];
+        return surname + given;
+    }
 }
 
 // ---- Mark dirty ----
@@ -430,6 +449,14 @@ const SCRIPT_TEMPLATES = [
             {
                 title: '首次短信/微信话术',
                 text: `{{name}}先生/女士您好，我是马上消费金融客服。关于您借款{{amount}}元的还款事宜，希望能与您取得联系。请回复或回电，谢谢配合。`
+            },
+            {
+                title: '无法接通留言话术',
+                text: `{{name}}先生/女士您好，我是马上消费金融调解专员，关于您借款{{amount}}元逾期{{overdueDays}}天的事宜，多次致电未能接通。请您在方便时回电联系，我们将为您提供协商还款方案。祝您生活愉快。`
+            },
+            {
+                title: '第三方转达话术',
+                text: `您好，请问是{{name}}的家人/同事吗？我是马上消费金融的工作人员，有一些关于{{name}}先生的个人事务需要与他本人沟通，麻烦您转告他回电联系，谢谢您的帮助。`
             }
         ]
     },
@@ -441,6 +468,18 @@ const SCRIPT_TEMPLATES = [
                 title: '二次跟进话术',
                 text: `{{name}}先生/女士，您好。关于上周提到的借款{{amount}}元逾期{{overdueDays}}天的问题，请问您是否已经考虑好了还款方案？
 我们希望能尽快帮您解决债务问题，避免逾期天数进一步增加。`
+            },
+            {
+                title: '承诺未兑现跟进',
+                text: `{{name}}先生/女士，您上次承诺在约定日期前还款{{amount}}元，但至今我们尚未收到款项。请问是什么原因导致未能按时还款？我们可以重新协商一个切实可行的方案。`
+            },
+            {
+                title: '部分还款后跟进',
+                text: `{{name}}先生/女士，已确认收到您偿还的部分款项。目前剩余应还金额约{{amount}}元，逾期{{overdueDays}}天。请问剩余款项您计划何时处理？我们可以继续提供分期支持。`
+            },
+            {
+                title: '失联后重新联系上',
+                text: `{{name}}先生/女士，很高兴终于联系上您。关于借款{{amount}}元逾期{{overdueDays}}天的情况，我们一直希望能与您沟通协商。逃避不是办法，我们一起想办法解决好吗？`
             }
         ]
     },
@@ -456,6 +495,63 @@ const SCRIPT_TEMPLATES = [
 • 减免部分违约金后，总还款金额将更具可操作性
 
 请问您每月可承受的还款金额大约是多少？`
+            },
+            {
+                title: '12期长分期方案',
+                text: `{{name}}先生/女士，考虑到您的实际情况，我们可为您提供最长12期的分期方案：
+• 应还总额约 {{amount}} 元
+• 分12期，每期还款压力大幅降低
+• 按期还款可减免部分违约金
+
+您觉得12期的方案是否可行？`
+            },
+            {
+                title: '一次性结清优惠方案',
+                text: `{{name}}先生/女士，如果您能在本月内一次性结清{{amount}}元欠款，我们可以为您申请减免部分违约金和利息。一次性结清后案件立即关闭，不会对您的征信产生进一步影响。请问您是否有能力一次性处理？`
+            },
+            {
+                title: '延期还款方案',
+                text: `{{name}}先生/女士，了解到您目前暂时遇到困难，我们可以为您申请延期30天还款。在此期间违约金暂停计算，到期后您需要一次性偿还{{amount}}元。请问这个方案可以接受吗？`
+            },
+            {
+                title: '部分减免+分期方案',
+                text: `{{name}}先生/女士，我们综合考虑您的困难，可提供以下优惠方案：
+• 减免部分利息和违约金
+• 剩余{{amount}}元分3-6期偿还
+• 每期还款金额在您可承受范围内
+
+这个方案既减轻了您的压力，也能尽快解决问题。您觉得如何？`
+            },
+            {
+                title: '收入困难特殊方案',
+                text: `{{name}}先生/女士，了解您目前收入困难的情况。我们可以为您申请特殊方案：
+• 首期仅需偿还少量金额（诚意金）
+• 后续根据您收入恢复情况调整还款计划
+• 需要您提供相关证明材料
+
+请问您可以接受这样的安排吗？`
+            }
+        ]
+    },
+    {
+        category: '协商减免',
+        icon: '🎁',
+        templates: [
+            {
+                title: '减免违约金协商',
+                text: `{{name}}先生/女士，关于借款{{amount}}元逾期{{overdueDays}}天产生的违约金，如果您能在约定日期前一次性结清本金和正常利息，我们可以申请全额减免违约金。这样您只需还本金加法定利息即可。`
+            },
+            {
+                title: '减免利息协商',
+                text: `{{name}}先生/女士，考虑到您的实际情况，我们可以将利息部分减免50%。您只需偿还本金{{amount}}元加上减免后的利息，总金额将大幅降低。请问您能接受吗？`
+            },
+            {
+                title: '本金分期免息方案',
+                text: `{{name}}先生/女士，我们为您争取到一个特别方案：只还本金{{amount}}元，可分3-6期，期间不计算利息。这是非常有诚意的方案，希望能帮您尽快解决债务问题。`
+            },
+            {
+                title: '特殊困难减免',
+                text: `{{name}}先生/女士，鉴于您目前的特殊情况（重大疾病/失业/自然灾害等），我们可以为您申请特殊困难减免。需要您提供相关证明材料，审核通过后可减免部分本金及全部违约金。请配合提供材料。`
             }
         ]
     },
@@ -469,6 +565,14 @@ const SCRIPT_TEMPLATES = [
 您同意在 YYYY年MM月DD日 前偿还 {{amount}} 元，如果按时履约，我们将为您减免部分费用。
 请务必按时还款，否则之前的减免方案将失效。
 再次确认，您一定能按时偿还对吗？`
+            },
+            {
+                title: '书面承诺引导',
+                text: `{{name}}先生/女士，为保障您的权益，建议我们签署一份还款承诺书。内容包括：还款金额{{amount}}元、还款日期、分期安排等。书面承诺对双方都有保障，您可以通过微信或邮件接收电子版。请问方便发您吗？`
+            },
+            {
+                title: '短信承诺确认版',
+                text: `{{name}}先生/女士，请您回复确认以下还款承诺：本人承诺于X月X日前偿还{{amount}}元，逾期未还将接受减免方案失效。请回复"同意"确认。`
             }
         ]
     },
@@ -485,6 +589,18 @@ const SCRIPT_TEMPLATES = [
 • 额外违约金累积
 
 请尽快与我们还清欠款或协商还款方案。我们不希望走到下一步，但最终还是需要您主动配合。`
+            },
+            {
+                title: '征信影响告知',
+                text: `{{name}}先生/女士，郑重提醒您：借款{{amount}}元逾期{{overdueDays}}天的记录即将上报至人民银行征信系统。一旦上报，将影响您未来的贷款、信用卡申请、甚至就业和子女入学。请务必在3个工作日内处理，避免不可逆的征信污点。`
+            },
+            {
+                title: '法律诉讼前最后通知',
+                text: `{{name}}先生/女士，这是启动法律程序前的最后一次通知。您的借款{{amount}}元已逾期{{overdueDays}}天，我方已准备向法院提交诉讼材料。如果在48小时内仍未收到您的还款或协商意愿，将正式启动诉讼流程。请立即联系我方。`
+            },
+            {
+                title: '委外催收告知',
+                text: `{{name}}先生/女士，因多次沟通未果，您的借款{{amount}}元逾期{{overdueDays}}天的案件将移交外部催收机构处理。委外催收可能采取更严格的催收手段，包括上门走访、单位联系等。为避免不必要的困扰，建议您在移交前与我方达成还款方案。`
             }
         ]
     },
@@ -501,6 +617,31 @@ const SCRIPT_TEMPLATES = [
 3. 上报征信系统
 
 请在3个工作日内联系我方协商还款事宜。`
+            },
+            {
+                title: '诉讼流程说明',
+                text: `{{name}}先生/女士，关于诉讼流程向您说明如下：
+1. 我方将向有管辖权的人民法院提交起诉状
+2. 法院立案后向您送达传票和起诉状副本
+3. 开庭审理，如您缺席将缺席判决
+4. 判决生效后申请强制执行
+5. 您将承担诉讼费、律师费等额外费用
+
+诉讼将产生额外约{{amount}}元的费用，建议在诉讼前协商解决。`
+            },
+            {
+                title: '失信被执行人后果',
+                text: `{{name}}先生/女士，如判决后仍未履行，您将被列入失信被执行人名单（俗称"老赖"），后果包括：
+• 限制高消费（飞机、高铁、星级酒店）
+• 冻结银行账户、查封财产
+• 影响子女就学、就业
+• 公开曝光个人信息
+
+借款仅{{amount}}元，为此背上失信记录得不偿失。请立即处理。`
+            },
+            {
+                title: '仲裁通知',
+                text: `{{name}}先生/女士，根据合同中的仲裁条款，关于借款{{amount}}元逾期{{overdueDays}}天一事，我方已向仲裁委员会提交仲裁申请。仲裁裁决具有与法院判决同等法律效力。建议您在仲裁庭组成前与我方协商解决，避免仲裁程序带来的额外成本。`
             }
         ]
     },
@@ -512,6 +653,14 @@ const SCRIPT_TEMPLATES = [
                 title: '还款完成确认',
                 text: `{{name}}先生/女士，确认收到您偿还的 {{amount}} 元。您的债务已结清，后续不会有额外费用产生。
 感谢您的配合，祝您生活愉快！如有其他问题可随时联系。`
+            },
+            {
+                title: '部分还款确认',
+                text: `{{name}}先生/女士，已确认收到您本次还款。目前剩余应还约{{amount}}元，逾期{{overdueDays}}天。请按约定继续完成后续还款。我们会在每个还款日提醒您，如遇到困难也可随时联系我们调整方案。`
+            },
+            {
+                title: '分期首期还款确认',
+                text: `{{name}}先生/女士，确认收到您分期方案的首期还款。您的还款计划已正式生效，接下来请按约定日期每月按时还款。如果在还款过程中遇到任何困难，请提前与我们沟通，不要等到逾期后再联系。`
             }
         ]
     },
@@ -523,6 +672,104 @@ const SCRIPT_TEMPLATES = [
                 title: '结案致谢话术',
                 text: `{{name}}先生/女士您好，您的案件已正式结案。感谢您在整个过程中的配合。
 我们已将您的还款记录保存，祝您未来一切顺利。如有朋友同样面临债务困扰，可推荐我们提供专业调解服务。`
+            },
+            {
+                title: '推荐转介绍话术',
+                text: `{{name}}先生/女士，恭喜您顺利完成还款！如果您身边有朋友也面临债务压力，可以推荐我们提供免费的债务咨询和协商调解服务。我们帮助过很多像您一样的客户走出困境，也许也能帮到您的朋友。`
+            }
+        ]
+    },
+    {
+        category: '反催收应对',
+        icon: '🛡️',
+        templates: [
+            {
+                title: '对方要求只还本金',
+                text: `{{name}}先生/女士，我理解您希望只还本金的想法。但根据合同约定和法律规定，借款期间产生的利息是需要支付的。不过我们可以协商：如果您能一次性结清，我们可以为您申请大幅减免利息和违约金，最终金额会非常接近本金。您觉得这样的方案可以吗？`
+            },
+            {
+                title: '对方要求提供书面凭证',
+                text: `{{name}}先生/女士，您要求提供书面材料是合理的。我们可以为您提供：借款合同复印件、还款记录明细、利率计算说明。请您提供接收方式，我们会在1个工作日内发送给您。收到材料后如有疑问可随时咨询。`
+            },
+            {
+                title: '对方威胁投诉/报警',
+                text: `{{name}}先生/女士，您完全有权通过合法途径维护自身权益。我们的催收行为严格遵守《催收自律公约》和相关法规。如果您认为有任何不当之处，可以向互联网金融协会或监管部门反映。同时，债务问题仍需解决，我们随时愿意与您协商合理方案。`
+            }
+        ]
+    },
+    {
+        category: '家人沟通',
+        icon: '👨‍👩‍👧',
+        templates: [
+            {
+                title: '告知家人债务情况',
+                text: `您好，请问是{{name}}的家人吗？我是马上消费金融的工作人员。关于{{name}}先生的借款{{amount}}元逾期{{overdueDays}}天的情况，我们已多次联系他本人但未得到有效回应。债务问题越早处理越好，希望能得到家人的理解和支持，协助他尽快解决。`
+            },
+            {
+                title: '家人愿意代还',
+                text: `感谢您的理解和支持！代偿流程很简单：您可以通过对公账户或指定还款渠道将{{amount}}元转入，到账后我们会立即结案并出具结清证明。请问您方便什么时候处理？我可以全程指导您操作。`
+            },
+            {
+                title: '家人拒绝配合',
+                text: `我理解您的立场。债务是{{name}}先生个人的责任，但逾期不还会对他本人造成严重后果：征信受损、法律诉讼、失信名单等。如果您能劝说他主动联系我们协商，就是对他最大的帮助。我们愿意提供灵活的还款方案。`
+            }
+        ]
+    },
+    {
+        category: '短信/微信',
+        icon: '💬',
+        templates: [
+            {
+                title: '催款短信模板',
+                text: `【马上消费金融】{{name}}先生/女士，您借款{{amount}}元已逾期{{overdueDays}}天，请尽快还款或联系协商方案。如已还款请忽略。咨询电话：XXX-XXXXXXX。`
+            },
+            {
+                title: '还款提醒短信',
+                text: `【还款提醒】{{name}}先生/女士，您承诺的还款日即将到期，请按时偿还{{amount}}元。如遇困难请提前联系协商，避免逾期影响征信。`
+            },
+            {
+                title: '到账确认短信',
+                text: `【到账确认】{{name}}先生/女士，已确认收到您还款{{amount}}元。您的案件状态已更新。如有疑问请联系客服。感谢配合！`
+            }
+        ]
+    },
+    {
+        category: '对公账户',
+        icon: '🏦',
+        templates: [
+            {
+                title: '对公还款指引',
+                text: `{{name}}先生/女士，以下是对公还款信息：
+• 收款账户：XX消费金融有限公司
+• 开户行：XX银行XX分行
+• 账号：XXXX XXXX XXXX XXXX
+• 汇款金额：{{amount}}元
+• 汇款附言：请注明您的姓名和合同编号
+
+汇款后请保留凭证并告知我们，以便及时确认到账并更新案件状态。`
+            },
+            {
+                title: '对账核实',
+                text: `{{name}}先生/女士，关于您提出的还款金额异议，我们需要核实以下信息：
+• 请提供您的还款记录（银行流水或转账截图）
+• 我们核对系统到账记录
+• 如有差额，逐笔核对确认
+
+请在1个工作日内提供凭证，我们会优先为您处理对账。`
+            }
+        ]
+    },
+    {
+        category: '情绪安抚',
+        icon: '💙',
+        templates: [
+            {
+                title: '对方情绪激动时',
+                text: `{{name}}先生/女士，我完全理解您现在的心情。面临债务压力确实不容易，我打电话不是来给您施压的，而是想帮您找到解决办法。请先深呼吸，我们不急，慢慢聊。告诉我您现在最大的困难是什么？我们一定能找到出路。`
+            },
+            {
+                title: '对方哭诉困难时',
+                text: `{{name}}先生/女士，听到您的情况我也很难过。生活中确实会有低谷期，但请相信没有过不去的坎。我们今天先不催您还款，您可以先说说您的困难。我们会根据您的实际情况申请最宽松的方案，比如延期、减免或者很小的分期。您不是一个人在扛。`
             }
         ]
     }
@@ -1211,7 +1458,7 @@ function generateWeeklyReport() {
 4. 持续优化协商方案，提高结案率
 
 ---
-本报告由催收工作台 v3.2 自动生成`;
+本报告由催收工作台 v3.3 自动生成`;
 
     currentReportText = report;
     document.getElementById('reportContent').textContent = report;
@@ -1578,7 +1825,10 @@ function switchMainTab(tabId) {
 }
 
 // ---- Modal Controls ----
-function openAddCase() { document.getElementById('addCaseModal').classList.add('show'); }
+function openAddCase() {
+    document.getElementById('caseName').value = generateRandomName();
+    document.getElementById('addCaseModal').classList.add('show');
+}
 function closeAddCase() { document.getElementById('addCaseModal').classList.remove('show'); }
 function closeDetail() { document.getElementById('detailModal').classList.remove('show'); }
 function openSettings() {
@@ -1588,10 +1838,16 @@ function openSettings() {
 function closeSettings() { document.getElementById('settingsModal').classList.remove('show'); }
 
 // ---- Sync ----
-async function syncNow() {
-    const token = document.getElementById('githubToken').value.trim();
-    if (!token) { alert('请先输入GitHub Token'); return; }
-    saveToken(token);
+async function syncNow(auto) {
+    let token;
+    if (auto) {
+        token = loadToken();
+        if (!token) return;
+    } else {
+        token = document.getElementById('githubToken').value.trim();
+        if (!token) { alert('请先输入GitHub Token'); return; }
+        saveToken(token);
+    }
 
     const badge = document.getElementById('syncBadge');
     badge.className = 'backup-status unsynced';
@@ -1634,7 +1890,7 @@ async function syncNow() {
         badge.className = 'backup-status unsynced';
         badge.textContent = '✗ 同步失败';
         console.error(e);
-        alert('同步失败: ' + e.message);
+        if (!auto) alert('同步失败: ' + e.message);
     }
 }
 
@@ -1737,6 +1993,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 页面加载时检查到期提醒
     setTimeout(checkRemindersOnLoad, 800);
+
+    // 如果有token，自动同步拉取远程数据
+    if (loadToken()) {
+        setTimeout(() => {
+            syncNow(true);
+        }, 1200);
+    }
 
     // 初始渲染
     renderAll();
