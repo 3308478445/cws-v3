@@ -935,7 +935,7 @@ function renderCaseList() {
         const reminderIcon = c.reminderStatus === REMINDER_STATUS.REMINDED ? '✅' : isOverdue ? '🔴' : '⏰';
 
         return `
-        <div class="case-item flex items-center justify-between" onclick="${currentBatchMode ? 'toggleCaseCheckbox(event,\'' + c.id + '\')' : 'showCaseDetail(\'' + c.id + '\')'}">
+        <div class="case-item flex items-center justify-between" data-status="${c.status}" onclick="${currentBatchMode ? 'toggleCaseCheckbox(event,\'' + c.id + '\')' : 'showCaseDetail(\'' + c.id + '\')'}">
             ${currentBatchMode ? `<input type="checkbox" class="batch-checkbox case-checkbox mr-2" data-case-id="${c.id}" onclick="event.stopPropagation();onCaseCheckboxChange(this)" style="pointer-events:auto">` : ''}
             <div class="flex items-center gap-3 flex-1 min-w-0">
                 <span class="status-dot status-${c.status}"></span>
