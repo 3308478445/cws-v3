@@ -8,7 +8,6 @@
     <style>
         /* ====== 深色玻璃拟态 Bento 风格 ====== */
         *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-
         body{
             font-family:-apple-system,'Inter','SF Pro Display',system-ui,sans-serif;
             background:#0a0a0f;
@@ -17,11 +16,9 @@
             overflow-x:hidden;
             -webkit-font-smoothing:antialiased
         }
-
         /* 弥散光晕背景 */
         body::before{
-            content:'';
-            position:fixed;inset:0;
+            content:'';position:fixed;inset:0;
             background:
                 radial-gradient(ellipse 80% 60% at 50% 0%, rgba(139,92,246,0.12) 0%, transparent 60%),
                 radial-gradient(ellipse 60% 50% at 100% 40%, rgba(236,72,153,0.08) 0%, transparent 55%),
@@ -31,8 +28,7 @@
         }
 
         /* ====== 工具类 ====== */
-        .hidden{display:none!important}
-        .block{display:block}.flex{display:flex}.grid{display:grid}
+        .hidden{display:none!important}.block{display:block}.flex{display:flex}.grid{display:grid}
         .items-center{align-items:center}.items-start{align-items:flex-start}
         .justify-between{justify-content:space-between}.justify-center{justify-content:center}
         .flex-col{flex-direction:column}.flex-1{flex:1 1 0%}.flex-shrink-0{flex-shrink:0}
@@ -41,11 +37,9 @@
         .min-w-0{min-width:0}.min-h-screen{min-height:100vh}
         .overflow-x-auto{overflow-x:auto}.overflow-y-auto{overflow-y:auto}
         .sticky{position:sticky}.top-0{top:0}.relative{position:relative}.absolute{position:absolute}
-        .cursor-pointer{cursor:pointer}.transition{transition:all .3s}.truncate{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+        .cursor-pointer{cursor:pointer}.truncate{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
         .whitespace-pre-wrap{white-space:pre-wrap}.w-full{width:100%}
         .leading-relaxed{line-height:1.625}
-
-        /* Spacing */
         .gap-1{gap:4px}.gap-2{gap:8px}.gap-3{gap:12px}
         .mt-1{margin-top:4px}.mt-2{margin-top:8px}.mt-3{margin-top:12px}.mt-4{margin-top:16px}.mt-5{margin-top:20px}
         .mb-1{margin-bottom:4px}.mb-2{margin-bottom:8px}.mb-3{margin-bottom:12px}.mb-4{margin-bottom:16px}.mb-5{margin-bottom:20px}
@@ -55,8 +49,6 @@
         .px-2{padding-inline:8px}.px-3{padding-inline:12px}.px-4{padding-inline:16px}.px-6{padding-inline:24px}
         .pb-1{padding-bottom:4px}.pb-24{padding-bottom:96px}
         .text-xs{font-size:12px}.text-sm{font-size:14px}.text-lg{font-size:18px}.text-xl{font-size:20px}.text-4xl{font-size:36px}
-
-        /* Grid */
         .grid-cols-2{grid-template-columns:1fr 1fr}
         .grid-cols-4{grid-template-columns:repeat(4,1fr)}
         .max-w-md{max-width:28rem}.max-w-2xl{max-width:42rem}.max-w-3xl{max-width:48rem}
@@ -66,80 +58,36 @@
         .list-decimal{list-style-type:decimal}.list-inside{list-style-position:inside}
 
         /* ====== 玻璃拟态核心 ====== */
-        .glass{
-            background:rgba(30,41,59,0.5);
-            backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
-            border:1px solid rgba(255,255,255,0.08)
-        }
-        .glass-light{
-            background:rgba(30,41,59,0.35);
-            backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
-            border:1px solid rgba(255,255,255,0.06)
-        }
+        .glass{background:rgba(30,41,59,0.5);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.08)}
+        .glass-light{background:rgba(30,41,59,0.35);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,0.06)}
 
         /* ====== Header ====== */
         .site-header{
             position:sticky;top:8px;z-index:50;
-            margin:8px 12px 0;
-            padding:10px 18px;
+            margin:8px 12px 0;padding:10px 18px;
             background:rgba(15,23,42,0.65);
             backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);
             border:1px solid rgba(255,255,255,0.08);
             border-radius:20px;
-            display:flex;align-items:center;justify-content:space-between;
-            gap:12px
+            display:flex;align-items:center;justify-content:space-between;gap:12px
         }
         .site-logo{font-size:16px;font-weight:700;background:linear-gradient(135deg,#a78bfa,#6366f1);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
         .site-ver{font-size:11px;color:#64748b;margin-left:6px;font-weight:400}
-        .header-btn{
-            width:36px;height:36px;border-radius:12px;
-            border:1px solid rgba(255,255,255,0.1);
-            background:rgba(255,255,255,0.05);color:#94a3b8;
-            font-size:16px;cursor:pointer;
-            display:flex;align-items:center;justify-content:center;
-            transition:all .25s
-        }
+        .header-btn{width:36px;height:36px;border-radius:12px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:#94a3b8;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .25s}
         .header-btn:hover{background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.2);color:#e2e8f0}
 
-        /* ====== Main Nav  ====== */
-        .main-nav{
-            display:flex;gap:3px;
-            margin:16px 12px 0;
-            padding:5px;
-            background:rgba(15,23,42,0.5);
-            backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
-            border:1px solid rgba(255,255,255,0.06);
-            border-radius:16px
-        }
-        .main-nav-btn{
-            flex:1;padding:10px 6px;border-radius:13px;
-            border:none;background:transparent;color:#64748b;
-            font-size:12px;font-weight:500;cursor:pointer;
-            transition:all .25s;white-space:nowrap;
-            min-height:44px;display:flex;align-items:center;justify-content:center;gap:4px
-        }
+        /* ====== Main Nav ====== */
+        .main-nav{display:flex;gap:3px;margin:16px 12px 0;padding:5px;background:rgba(15,23,42,0.5);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.06);border-radius:16px}
+        .main-nav-btn{flex:1;padding:10px 6px;border-radius:13px;border:none;background:transparent;color:#64748b;font-size:12px;font-weight:500;cursor:pointer;transition:all .25s;white-space:nowrap;min-height:44px;display:flex;align-items:center;justify-content:center;gap:4px}
         .main-nav-btn.active{background:rgba(139,92,246,0.18);color:#c084fc}
 
         /* ====== 内容区 ====== */
         .content{padding:0 12px 100px;position:relative;z-index:1}
 
         /* ====== 统计卡片 ====== */
-        .stat-card{
-            background:rgba(30,41,59,0.45);
-            backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
-            border:1px solid rgba(255,255,255,0.07);
-            border-radius:20px;
-            padding:18px 14px;
-            text-align:center;
-            position:relative;overflow:hidden;
-            transition:all .3s cubic-bezier(.25,.1,.25,1)
-        }
+        .stat-card{background:rgba(30,41,59,0.45);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.07);border-radius:20px;padding:18px 14px;text-align:center;position:relative;overflow:hidden;transition:all .3s cubic-bezier(.25,.1,.25,1)}
         .stat-card:hover{transform:translateY(-2px);border-color:rgba(255,255,255,0.14);box-shadow:0 16px 32px -8px rgba(0,0,0,0.5)}
-        .stat-card::after{
-            content:'';position:absolute;
-            top:-60%;right:-60%;width:140%;height:140%;
-            border-radius:50%;opacity:.1;pointer-events:none
-        }
+        .stat-card::after{content:'';position:absolute;top:-60%;right:-60%;width:140%;height:140%;border-radius:50%;opacity:.1;pointer-events:none}
         .stat-card:nth-child(1)::after{background:radial-gradient(#8b5cf6,transparent)}
         .stat-card:nth-child(2)::after{background:radial-gradient(#a3e635,transparent)}
         .stat-card:nth-child(3)::after{background:radial-gradient(#ec4899,transparent)}
@@ -155,24 +103,11 @@
         .status-failed{background:#f87171;box-shadow:0 0 8px rgba(248,113,113,.4)}
 
         /* ====== 案件卡片 ====== */
-        .case-item{
-            position:relative;
-            background:rgba(30,41,59,0.4);
-            backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
-            border:1px solid rgba(255,255,255,0.05);
-            border-radius:18px;padding:16px 14px;
-            margin-bottom:8px;cursor:pointer;
-            transition:all .3s cubic-bezier(.25,.1,.25,1);
-            overflow:hidden
-        }
+        .case-item{position:relative;background:rgba(30,41,59,0.4);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,0.05);border-radius:18px;padding:16px 14px;margin-bottom:8px;cursor:pointer;transition:all .3s cubic-bezier(.25,.1,.25,1);overflow:hidden}
         .case-item:hover{border-color:rgba(255,255,255,0.12);transform:translateX(3px);box-shadow:0 12px 30px -8px rgba(0,0,0,.4)}
         .case-item:active{transform:scale(.98)}
         .case-item.selected{border-color:#c084fc;background:rgba(139,92,246,.08)}
-        .case-item::before{
-            content:'';position:absolute;
-            left:0;top:14px;bottom:14px;
-            width:3px;border-radius:0 3px 3px 0
-        }
+        .case-item::before{content:'';position:absolute;left:0;top:14px;bottom:14px;width:3px;border-radius:0 3px 3px 0}
         .case-item[data-status="pending"]::before{background:#fbbf24;box-shadow:0 0 10px rgba(251,191,36,.4)}
         .case-item[data-status="contacted"]::before{background:#818cf8;box-shadow:0 0 10px rgba(129,140,248,.4)}
         .case-item[data-status="promised"]::before{background:#a3e635;box-shadow:0 0 10px rgba(163,230,53,.4)}
@@ -180,84 +115,32 @@
         .case-item[data-status="failed"]::before{background:#f87171;box-shadow:0 0 10px rgba(248,113,113,.4)}
 
         /* ====== 过滤器标签 ====== */
-        .filter-tab{
-            padding:8px 16px;border-radius:14px;font-size:12px;font-weight:500;
-            cursor:pointer;white-space:nowrap;transition:all .25s;
-            background:rgba(30,41,59,0.5);
-            backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
-            border:1px solid rgba(255,255,255,0.06)
-        }
+        .filter-tab{padding:8px 16px;border-radius:14px;font-size:12px;font-weight:500;cursor:pointer;white-space:nowrap;transition:all .25s;background:rgba(30,41,59,0.5);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.06)}
         .filter-tab.active{background:rgba(139,92,246,.18);color:#c084fc;border-color:rgba(139,92,246,.3)}
 
         /* ====== 按钮 ====== */
-        .btn-primary{
-            background:linear-gradient(135deg,#818cf8,#8b5cf6);color:#fff;
-            border:none;padding:12px 24px;border-radius:14px;
-            font-weight:600;font-size:15px;cursor:pointer;
-            transition:all .25s
-        }
+        .btn-primary{background:linear-gradient(135deg,#818cf8,#8b5cf6);color:#fff;border:none;padding:12px 24px;border-radius:14px;font-weight:600;font-size:15px;cursor:pointer;transition:all .25s}
         .btn-primary:active{opacity:.85;transform:scale(.97)}
-        .btn-secondary{
-            background:rgba(148,163,184,.08);color:#e2e8f0;
-            border:1px solid rgba(148,163,184,.15);
-            padding:10px 20px;border-radius:14px;font-size:14px;cursor:pointer;
-            transition:all .25s;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)
-        }
+        .btn-secondary{background:rgba(148,163,184,.08);color:#e2e8f0;border:1px solid rgba(148,163,184,.15);padding:10px 20px;border-radius:14px;font-size:14px;cursor:pointer;transition:all .25s;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
         .btn-secondary:hover{border-color:rgba(148,163,184,.25)}
-        .btn-danger{
-            background:rgba(239,68,68,.12);color:#f87171;
-            border:1px solid rgba(239,68,68,.2);
-            padding:10px 20px;border-radius:14px;font-size:14px;cursor:pointer;
-            transition:all .25s
-        }
+        .btn-danger{background:rgba(239,68,68,.12);color:#f87171;border:1px solid rgba(239,68,68,.2);padding:10px 20px;border-radius:14px;font-size:14px;cursor:pointer;transition:all .25s}
         .btn-sm{padding:6px 14px;font-size:12px;border-radius:10px}
 
         /* ====== 输入框 ====== */
-        .input-field{
-            width:100%;padding:12px 16px;
-            background:rgba(30,41,59,0.5);
-            backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
-            border:1px solid rgba(255,255,255,0.08);
-            border-radius:14px;color:#fff;font-size:15px;
-            transition:border-color .25s;outline:none
-        }
+        .input-field{width:100%;padding:12px 16px;background:rgba(30,41,59,0.5);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.08);border-radius:14px;color:#fff;font-size:15px;transition:border-color .25s;outline:none}
         .input-field:focus{border-color:#a78bfa}
 
         /* ====== FAB ====== */
-        .fab{
-            position:fixed;bottom:20px;right:20px;
-            width:56px;height:56px;border-radius:18px;
-            background:linear-gradient(135deg,#818cf8,#8b5cf6);
-            border:1px solid rgba(255,255,255,.15);color:#fff;
-            font-size:26px;cursor:pointer;
-            box-shadow:0 8px 32px rgba(99,102,241,.4);
-            z-index:90;display:flex;align-items:center;justify-content:center;
-            transition:all .3s
-        }
+        .fab{position:fixed;bottom:20px;right:20px;width:56px;height:56px;border-radius:18px;background:linear-gradient(135deg,#818cf8,#8b5cf6);border:1px solid rgba(255,255,255,.15);color:#fff;font-size:26px;cursor:pointer;box-shadow:0 8px 32px rgba(99,102,241,.4);z-index:90;display:flex;align-items:center;justify-content:center;transition:all .3s}
         .fab:active{transform:scale(.9) rotate(45deg)}
         .fab:hover{box-shadow:0 12px 40px rgba(99,102,241,.6)}
 
         /* ====== Modal ====== */
-        .modal-overlay{
-            position:fixed;top:0;left:0;right:0;bottom:0;
-            background:rgba(0,0,0,.75);z-index:100;
-            display:none;align-items:flex-end;justify-content:center
-        }
+        .modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.75);z-index:100;display:none;align-items:flex-end;justify-content:center}
         .modal-overlay.show{display:flex}
-        .modal-sheet{
-            background:rgba(15,23,42,.98);
-            backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);
-            border:1px solid rgba(255,255,255,.08);
-            width:100%;max-width:600px;max-height:90vh;
-            border-radius:24px 24px 0 0;overflow-y:auto;padding:24px 20px;
-            animation:slideUp .3s cubic-bezier(.25,.1,.25,1)
-        }
+        .modal-sheet{background:rgba(15,23,42,.98);backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);border:1px solid rgba(255,255,255,.08);width:100%;max-width:600px;max-height:90vh;border-radius:24px 24px 0 0;overflow-y:auto;padding:24px 20px;animation:slideUp .3s cubic-bezier(.25,.1,.25,1)}
         @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
-        .tab-btn{
-            padding:8px 16px;font-size:14px;
-            border-bottom:2px solid transparent;cursor:pointer;
-            background:none;color:#94a3b8;transition:all .25s
-        }
+        .tab-btn{padding:8px 16px;font-size:14px;border-bottom:2px solid transparent;cursor:pointer;background:none;color:#94a3b8;transition:all .25s}
         .tab-btn.active{border-bottom-color:#a78bfa;color:#c084fc}
 
         /* ====== 标签 ====== */
@@ -270,34 +153,17 @@
         .unsynced{background:rgba(251,191,36,.12);color:#fbbf24}
 
         /* ====== 批量操作 ====== */
-        .batch-bar{
-            display:none;
-            background:rgba(139,92,246,.08);
-            backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
-            border:1px solid rgba(139,92,246,.15);
-            border-radius:14px;padding:10px 14px;margin-bottom:10px
-        }
+        .batch-bar{display:none;background:rgba(139,92,246,.08);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(139,92,246,.15);border-radius:14px;padding:10px 14px;margin-bottom:10px}
         .batch-bar.show{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
         .batch-checkbox{width:22px;height:22px;accent-color:#a78bfa;cursor:pointer;flex-shrink:0;margin:0}
 
         /* ====== 话术模板 ====== */
-        .template-card{
-            background:rgba(30,41,59,.4);
-            backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
-            border:1px solid rgba(255,255,255,.06);
-            border-radius:14px;padding:12px 14px;margin-bottom:8px;
-            transition:all .25s
-        }
+        .template-card{background:rgba(30,41,59,.4);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:12px 14px;margin-bottom:8px;transition:all .25s}
         .template-card:hover{border-color:rgba(255,255,255,.15)}
         .template-card .template-text{font-size:13px;line-height:1.6;color:#cbd5e1;white-space:pre-wrap;max-height:120px;overflow-y:auto;margin:8px 0}
 
         /* ====== 知识库 ====== */
-        .kb-card{
-            background:rgba(30,41,59,.35);
-            backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
-            border:1px solid rgba(255,255,255,.06);
-            border-radius:14px;overflow:hidden;margin-bottom:8px
-        }
+        .kb-card{background:rgba(30,41,59,.35);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.06);border-radius:14px;overflow:hidden;margin-bottom:8px}
         .kb-card-header{padding:14px 16px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;min-height:44px}
         .kb-card-header:active{background:rgba(148,163,184,.05)}
         .kb-card-body{display:none;padding:0 16px 16px;font-size:13px;line-height:1.7;color:#94a3b8}
@@ -309,54 +175,22 @@
         .kb-arrow.open{transform:rotate(180deg)}
 
         /* ====== 业绩看板 ====== */
-        .perf-metric{
-            background:rgba(30,41,59,.5);
-            backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
-            border:1px solid rgba(255,255,255,.06);
-            border-radius:14px;padding:14px
-        }
-        .chart-container{
-            background:rgba(30,41,59,.4);
-            backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
-            border:1px solid rgba(255,255,255,.06);
-            border-radius:16px;padding:14px;margin-bottom:14px
-        }
+        .perf-metric{background:rgba(30,41,59,.5);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:14px}
+        .chart-container{background:rgba(30,41,59,.4);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:14px;margin-bottom:14px}
         .chart-container canvas{max-height:260px}
 
         /* ====== 周报 ====== */
-        .report-box{
-            background:rgba(30,41,59,.4);
-            backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
-            border:1px solid rgba(255,255,255,.08);
-            border-radius:16px;padding:16px;
-            white-space:pre-wrap;font-size:14px;line-height:1.8;
-            max-height:500px;overflow-y:auto;color:#cbd5e1
-        }
+        .report-box{background:rgba(30,41,59,.4);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:16px;white-space:pre-wrap;font-size:14px;line-height:1.8;max-height:500px;overflow-y:auto;color:#cbd5e1}
         .report-box h3{color:#c084fc;font-size:16px;font-weight:700;margin:12px 0 6px}
         .report-box h3:first-child{margin-top:0}
 
         /* ====== 跟进提醒 ====== */
-        .reminder-alert{
-            background:rgba(251,191,36,.06);
-            backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
-            border:1px solid rgba(251,191,36,.15);
-            border-radius:14px;padding:12px 14px;margin-bottom:12px;
-            cursor:pointer;transition:all .2s
-        }
+        .reminder-alert{background:rgba(251,191,36,.06);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(251,191,36,.15);border-radius:14px;padding:12px 14px;margin-bottom:12px;cursor:pointer;transition:all .2s}
         .reminder-alert:active{background:rgba(251,191,36,.1)}
         .reminder-overdue{background:rgba(248,113,113,.06);border-color:rgba(248,113,113,.15)}
 
         /* ====== Toast ====== */
-        .toast{
-            position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:200;
-            background:rgba(30,41,59,.95);color:#e2e8f0;
-            padding:12px 24px;border-radius:14px;font-size:14px;
-            border:1px solid rgba(255,255,255,.1);
-            box-shadow:0 8px 32px rgba(0,0,0,.5);
-            animation:toastIn .3s ease-out;
-            pointer-events:none;max-width:90vw;text-align:center;
-            backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)
-        }
+        .toast{position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:200;background:rgba(30,41,59,.95);color:#e2e8f0;padding:12px 24px;border-radius:14px;font-size:14px;border:1px solid rgba(255,255,255,.1);box-shadow:0 8px 32px rgba(0,0,0,.5);animation:toastIn .3s ease-out;pointer-events:none;max-width:90vw;text-align:center;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
         .toast.warning{border-color:#fbbf24;background:rgba(251,191,36,.1)}
         .toast.error{border-color:#f87171;background:rgba(248,113,113,.1)}
         .toast.success{border-color:#34d399;background:rgba(52,211,153,.1)}
@@ -368,10 +202,25 @@
         .funnel-bar:nth-child(1){background:linear-gradient(90deg,#c084fc,#8b5cf6)}
         .funnel-bar:nth-child(2){background:linear-gradient(90deg,#818cf8,#6366f1)}
         .funnel-bar:nth-child(3){background:linear-gradient(90deg,#34d399,#059669)}
-        .funnel-bar:nth-child(4){background:linear-gradient(90deg,#64748b,#475569)}
+        .funnel-bar:nth-child(4){background:linear-gradient(90deg,#64748b,#475569)}}
 
-        /* ====== 入口动画 ====== */
-        @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+        /* ====== 响应式：电脑端优化 ====== */
+        @media(min-width:768px){
+            body::before{
+                background:
+                    radial-gradient(ellipse 60% 50% at 30% 0%, rgba(139,92,246,0.15) 0%, transparent 55%),
+                    radial-gradient(ellipse 50% 45% at 85% 30%, rgba(236,72,153,0.12) 0%, transparent 50%),
+                    radial-gradient(ellipse 55% 40% at 10% 80%, rgba(163,230,53,0.08) 0%, transparent 50%),
+                    radial-gradient(ellipse 40% 35% at 70% 70%, rgba(59,130,246,0.12) 0%, transparent 50%);
+                background-size: cover;
+            }
+            .pc-content{max-width:1100px;margin:0 auto;padding:0 24px}
+            .pc-stats{grid-template-columns:repeat(4,1fr);gap:16px}
+            .pc-case-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+            .pc-case-grid .case-item{margin-bottom:0}
+            .site-header{margin:12px auto 0;max-width:1100px}
+            .main-nav{max-width:1100px;margin:16px auto 0}
+        }
     </style>
 </head>
 <body>
@@ -396,7 +245,7 @@
         <button class="main-nav-btn" data-tab="tabReport">📝 周报</button>
     </nav>
 
-    <main class="content">
+    <main class="content pc-content">
 
         <!-- ==================== Tab: 案件管理 ==================== -->
         <div id="tabCases" class="main-tab">
@@ -405,21 +254,21 @@
 
             <!-- Dashboard Stats -->
             <section class="my-4">
-                <div class="grid grid-cols-4 gap-2">
+                <div class="grid grid-cols-4 gap-3 pc-stats">
                     <div class="stat-card text-center">
-                        <div class="stat-value text-amber-400" id="statPending">0</div>
+                        <div class="stat-value" id="statPending" style="color:#fbbf24">0</div>
                         <div class="text-xs text-slate-400 mt-1">待联系</div>
                     </div>
                     <div class="stat-card text-center">
-                        <div class="stat-value text-blue-400" id="statContacted">0</div>
+                        <div class="stat-value" id="statContacted" style="color:#818cf8">0</div>
                         <div class="text-xs text-slate-400 mt-1">已联系</div>
                     </div>
                     <div class="stat-card text-center">
-                        <div class="stat-value text-emerald-400" id="statPromised">0</div>
+                        <div class="stat-value" id="statPromised" style="color:#a3e635">0</div>
                         <div class="text-xs text-slate-400 mt-1">已承诺</div>
                     </div>
                     <div class="stat-card text-center">
-                        <div class="stat-value text-slate-400" id="statResolved">0</div>
+                        <div class="stat-value" id="statResolved" style="color:#94a3b8">0</div>
                         <div class="text-xs text-slate-400 mt-1">已结案</div>
                     </div>
                 </div>
@@ -427,7 +276,7 @@
 
             <!-- 批量操作栏 -->
             <div class="batch-bar" id="batchBar">
-                <label class="flex items-center gap-1 text-xs text-slate-400 min-h-[44px]" style="cursor:pointer">
+                <label class="flex items-center gap-1 text-xs text-slate-400" style="cursor:pointer;min-height:44px">
                     <input type="checkbox" class="batch-checkbox" id="selectAllCheckbox" onchange="toggleSelectAll()">
                     全选
                 </label>
@@ -453,75 +302,70 @@
             </section>
 
             <!-- Case List -->
-            <section id="caseList">
+            <div id="caseList">
                 <div class="text-center text-slate-500 py-12" id="emptyState">
                     <div class="text-4xl mb-3">📭</div>
-                    <p>暂无案件，点击右下角 + 添加</p>
+                    <p>暂无案件，点击右下角 ＋ 添加</p>
                 </div>
-            </section>
+            </div>
         </div>
 
         <!-- ==================== Tab: 业绩看板 ==================== -->
         <div id="tabDashboard" class="main-tab hidden">
             <section class="my-4">
-                <!-- 今日数据 -->
                 <h3 class="text-sm font-medium text-slate-400 mb-2">📅 今日数据</h3>
                 <div class="grid grid-cols-4 gap-2 mb-4">
                     <div class="stat-card text-center">
-                        <div class="stat-value text-blue-400" id="perfTodayContacts">0</div>
+                        <div class="stat-value" id="perfTodayContacts" style="color:#818cf8">0</div>
                         <div class="text-xs text-slate-400 mt-1">联系次数</div>
                     </div>
                     <div class="stat-card text-center">
-                        <div class="stat-value text-emerald-400" id="perfTodayPromises">0</div>
+                        <div class="stat-value" id="perfTodayPromises" style="color:#a3e635">0</div>
                         <div class="text-xs text-slate-400 mt-1">承诺数</div>
                     </div>
                     <div class="stat-card text-center">
-                        <div class="stat-value text-slate-400" id="perfTodayResolved">0</div>
+                        <div class="stat-value" id="perfTodayResolved" style="color:#94a3b8">0</div>
                         <div class="text-xs text-slate-400 mt-1">结案数</div>
                     </div>
                     <div class="stat-card text-center">
-                        <div class="stat-value text-amber-400" id="perfTodayAmount">0</div>
+                        <div class="stat-value" id="perfTodayAmount" style="color:#fbbf24">0</div>
                         <div class="text-xs text-slate-400 mt-1">回收(万)</div>
                     </div>
                 </div>
 
-                <!-- 本周趋势图 -->
                 <div class="chart-container">
                     <h4 class="text-xs text-slate-400 mb-2">📈 本周趋势</h4>
                     <canvas id="weeklyTrendChart"></canvas>
                 </div>
 
-                <!-- 产品分布饼图 -->
                 <div class="chart-container">
                     <h4 class="text-xs text-slate-400 mb-2">🥧 产品分布</h4>
                     <canvas id="productPieChart"></canvas>
                 </div>
 
-                <!-- 状态转化漏斗 -->
                 <div class="chart-container">
                     <h4 class="text-xs text-slate-400 mb-3">🔽 状态转化漏斗</h4>
                     <div id="funnelContainer"></div>
                 </div>
 
-                <!-- 关键指标 -->
                 <div class="chart-container">
                     <h4 class="text-xs text-slate-400 mb-3">📊 关键指标</h4>
                     <div class="grid grid-cols-2 gap-2">
                         <div class="perf-metric">
                             <div class="text-xs text-slate-400">平均逾期天数</div>
-                            <div class="text-xl font-bold text-slate-200" id="kpiAvgOverdue">0</div>
+                            <div class="text-xl font-bold" id="kpiAvgOverdue" style="color:#e2e8f0">0</div>
                         </div>
                         <div class="perf-metric">
                             <div class="text-xs text-slate-400">平均回款率</div>
-                            <div class="text-xl font-bold text-emerald-400" id="kpiRecoveryRate">0%</div>
+                            <div class="text-xl font-bold" id="kpiRecoveryRate" style="color:#a3e635">0%</div>
                         </div>
                         <div class="perf-metric">
                             <div class="text-xs text-slate-400">单案平均金额</div>
-                            <div class="text-xl font-bold text-amber-400" id="kpiAvgAmount">0</div>
+                            <div class="text-xl font-bold" id="kpiAvgAmount" style="color:#fbbf24">0</div>
                         </div>
                         <div class="perf-metric">
                             <div class="text-xs text-slate-400">本周转化率</div>
-                            <div class="text-xl font-bold text-blue-400" id="kpiConversionRate">0%</div>
+                            <div class="text-xl font-bold" id="kpiConversionRate" style="color:#818cf8">0%</div>
                         </div>
                     </div>
                 </div>
@@ -531,11 +375,9 @@
         <!-- ==================== Tab: 知识库 ==================== -->
         <div id="tabKnowledge" class="main-tab hidden">
             <section class="my-4">
-                <!-- 搜索框 -->
                 <div class="mb-3">
                     <input type="text" id="kbSearch" class="input-field" placeholder="🔍 搜索知识库..." oninput="renderKnowledgeBase()">
                 </div>
-                <!-- 分类筛选 -->
                 <div class="flex gap-2 overflow-x-auto pb-1 mb-3" id="kbCategoryTabs">
                     <span class="filter-tab active" data-kbcat="all">全部</span>
                     <span class="filter-tab" data-kbcat="法律法规">法律法规</span>
@@ -543,7 +385,6 @@
                     <span class="filter-tab" data-kbcat="常见问题">常见问题</span>
                     <span class="filter-tab" data-kbcat="话术模板库">话术模板库</span>
                 </div>
-                <!-- 知识库列表 -->
                 <div id="kbList"></div>
             </section>
         </div>
@@ -579,7 +420,7 @@
         <div class="modal-sheet">
             <div class="flex items-center justify-between mb-5">
                 <h2 class="text-lg font-bold">新建案件</h2>
-                <button onclick="closeAddCase()" class="text-slate-400 text-xl min-h-[44px] min-w-[44px]">&times;</button>
+                <button onclick="closeAddCase()" class="text-slate-400 text-xl" style="min-height:44px;min-width:44px;background:none;border:none;cursor:pointer">&times;</button>
             </div>
             <form onsubmit="addCase(event)" class="space-y-4">
                 <div>
@@ -612,12 +453,12 @@
         <div class="modal-sheet" id="detailContent"></div>
     </div>
 
-    <!-- Reminder Date-Time Picker Modal -->
+    <!-- Reminder Modal -->
     <div class="modal-overlay" id="reminderModal">
         <div class="modal-sheet">
             <div class="flex items-center justify-between mb-5">
                 <h2 class="text-lg font-bold">⏰ 设置跟进提醒</h2>
-                <button onclick="closeReminderModal()" class="text-slate-400 text-xl min-h-[44px] min-w-[44px]">&times;</button>
+                <button onclick="closeReminderModal()" class="text-slate-400 text-xl" style="min-height:44px;min-width:44px;background:none;border:none;cursor:pointer">&times;</button>
             </div>
             <div class="space-y-4">
                 <div>
@@ -639,7 +480,7 @@
         <div class="modal-sheet">
             <div class="flex items-center justify-between mb-5">
                 <h2 class="text-lg font-bold">⚙️ 设置</h2>
-                <button onclick="closeSettings()" class="text-slate-400 text-xl min-h-[44px] min-w-[44px]">&times;</button>
+                <button onclick="closeSettings()" class="text-slate-400 text-xl" style="min-height:44px;min-width:44px;background:none;border:none;cursor:pointer">&times;</button>
             </div>
             <div class="space-y-4">
                 <div>
@@ -649,7 +490,7 @@
                 <button onclick="syncNow()" class="btn-primary w-full">🔄 手动同步</button>
                 <button onclick="exportData()" class="btn-secondary w-full">📤 导出数据备份</button>
                 <button onclick="importDataPrompt()" class="btn-secondary w-full">📥 导入数据备份</button>
-                <hr class="border-slate-700">
+                <hr style="border-color:rgba(255,255,255,0.1)">
                 <p class="text-xs text-slate-500">数据存储: localStorage · 手机内部存储</p>
                 <p class="text-xs text-slate-500">版本: v3.3 · 催收工作台</p>
             </div>
@@ -659,5 +500,28 @@
     <script src="app.js"></script>
     <script src="pwa-install.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script>
+        // 电脑端：案件列表双列
+        function updateCaseListLayout() {
+            const list = document.getElementById('caseList');
+            if (!list) return;
+            if (window.innerWidth >= 768) {
+                list.classList.add('pc-case-grid');
+            } else {
+                list.classList.remove('pc-case-grid');
+            }
+        }
+        window.addEventListener('resize', updateCaseListLayout);
+        // 在 renderCases 后调用（在 app.js 里 hook）
+        const origRenderCases = window.renderCases;
+        if (origRenderCases) {
+            window.renderCases = function() {
+                origRenderCases.apply(this, arguments);
+                updateCaseListLayout();
+            };
+        }
+        // 首次执行
+        setTimeout(updateCaseListLayout, 100);
+    </script>
 </body>
 </html>
